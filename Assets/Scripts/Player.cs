@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float _speed = 3.5f;
+    [SerializeField] private float _speed = 5f;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private float _fireRate = 0.15f;
     private float _canFire = -1f;
@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     [SerializeField] private bool _isTripleShotActive = false;
     [SerializeField] private GameObject _tripleShot;
+    [SerializeField] private bool _isSpeedBoostActive = false;
+    
 
     void Start()
     {
@@ -32,18 +34,26 @@ public class Player : MonoBehaviour
         {
             FireLaser();
         }
-
-
-
     }
     void CalculateMovement()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-        //movement
-        transform.Translate(_speed * Time.deltaTime * direction);
         
+        //movement
+        if(_isSpeedBoostActive == true)
+        {
+            _speed = 10f;
+            transform.Translate(_speed * Time.deltaTime * direction);
+        }
+        else
+        {
+            _speed = 5f;
+            transform.Translate(_speed * Time.deltaTime * direction);
+        }
+        
+
         //vertical player bounds
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
 
@@ -86,11 +96,21 @@ public class Player : MonoBehaviour
         _isTripleShotActive = true;
         StartCoroutine(TripleShotPowerDownRoutine());
     }
+
+    public void ActivateSpeedBoostPowerup()
+    {
+        _isSpeedBoostActive = true;
+        StartCoroutine(SpeedBoostPowerDownRoutine());
+    }
     IEnumerator TripleShotPowerDownRoutine()
     {
         yield return new WaitForSeconds(5.0f);
         _isTripleShotActive = false;
     }
-
+    IEnumerator SpeedBoostPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _isSpeedBoostActive = false;
+    }
 }
 
