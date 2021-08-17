@@ -33,7 +33,7 @@ public class Powerup : MonoBehaviour
                         player.ActivateSpeedBoostPowerup();
                         break;
                     case 2:
-                        print("Shield");
+                        player.ActivateShieldPowerup();
                         break;
                     default:
                         print("Default Value");
