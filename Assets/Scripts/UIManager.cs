@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,20 +10,19 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image _livesImg;
     [SerializeField] private Text _gameOverText;
     [SerializeField] private Text _restartText;
-    [SerializeField] private bool _canRestart = false;
+    [SerializeField] private GameManager _gameManager;
     void Start()
     {
         _scoreText.text = "Score: " + 0;
         _gameOverText.gameObject.SetActive(false);
-    }
-
-    void Update()
-    {
-        if (_canRestart == true && Input.GetKeyDown(KeyCode.R))
+        _restartText.gameObject.SetActive(false);
+        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        if(_gameManager == null)
         {
-            SceneManager.LoadScene("Starting_Scene");
+            Debug.LogError("The Game_Manager is NULL");
         }
     }
+
 
     public void UpdateScore(int playerScore)
     {
@@ -34,16 +32,18 @@ public class UIManager : MonoBehaviour
     public void UpdateLives(int currentLives)
     {
         _livesImg.sprite = _livesSprites[currentLives];
-
         if(currentLives == 0)
         {
-            
-            _gameOverText.gameObject.SetActive(true);
-            _restartText.gameObject.SetActive(true);
-            StartCoroutine(GameOverFlickerRoutine());
-            _canRestart = true;
+            GameOverSequence();
         }
+    }
 
+    void GameOverSequence()
+    {
+        _gameOverText.gameObject.SetActive(true);
+        _restartText.gameObject.SetActive(true);
+        StartCoroutine(GameOverFlickerRoutine());
+        _gameManager.GameOver();
     }
 
     IEnumerator GameOverFlickerRoutine()

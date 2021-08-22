@@ -7,8 +7,6 @@ using UnityEngine.SceneManagement;
 public class Starting_Game_UI : MonoBehaviour
 {
     [SerializeField] private Text _countdownText;
-    
-    // Start is called before the first frame update
     void Start()
     {
         _countdownText.gameObject.SetActive(false);
@@ -24,7 +22,7 @@ public class Starting_Game_UI : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         _countdownText.text = "1";
         yield return new WaitForSeconds(1.0f);
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene(2); // Game Scene
     }
 
 }
