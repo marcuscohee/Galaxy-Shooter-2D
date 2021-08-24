@@ -9,6 +9,7 @@ TagManager:
   - Triple_Shot
   - Shield
   - Speed_Boost
+  - Asteroid
   layers:
   - Default
   - TransparentFX

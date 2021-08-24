@@ -5,7 +5,6 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private float _speed = 4.0f;
-    [SerializeField] private bool _isEnemyDead = false;
 
     private Player _player;
     [SerializeField] private Animator _onEnemyDeath;
@@ -27,16 +26,6 @@ public class Enemy : MonoBehaviour
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
-        if (transform.position.y < -6.5f && _isEnemyDead == true)
-        {
-            Destroy(this.gameObject);
-        }
-
-        if (_isEnemyDead == true)
-        {
-            transform.GetComponent<BoxCollider2D>().enabled = false;
-        }
-
         if (transform.position.y < -6.5f)
         {
             float respawn = Random.Range(-9.5f, 9.5f);
@@ -55,28 +44,30 @@ public class Enemy : MonoBehaviour
             {
                 player.Damage();
             }
-            _isEnemyDead = true;
-            StartCoroutine(EnemyDeathAnimRoutine());
+            _speed = 0;
+            _onEnemyDeath.SetTrigger("OnEnemyDeath");
+            StartCoroutine(ExplosionRoutine());
+            Destroy(this.gameObject, 2.0f);
         }
 
         if (other.tag == "Laser")
         {
             Destroy(other.gameObject);
-            
-            if(_player != null)
+
+            if (_player != null)
             {
                 _player.AddScore(10);
             }
-            _isEnemyDead = true;
-            StartCoroutine(EnemyDeathAnimRoutine());
-        }
-
-        IEnumerator EnemyDeathAnimRoutine()
-        {
+            _speed = 0;
             _onEnemyDeath.SetTrigger("OnEnemyDeath");
-            yield return new WaitForSeconds(2.38f);
-            Destroy(this.gameObject);
-        }
-       
+            StartCoroutine(ExplosionRoutine());
+            Destroy(this.gameObject, 2.0f);
+        }   
+    }
+
+    IEnumerator ExplosionRoutine()
+    {
+        yield return new WaitForSeconds(0.4f);
+        GetComponent<BoxCollider2D>().enabled = false;
     }
 }

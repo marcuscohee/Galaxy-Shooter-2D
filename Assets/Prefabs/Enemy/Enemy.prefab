@@ -48,7 +48,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 4
-  _isEnemyDead: 0
   _onEnemyDeath: {fileID: 0}
 --- !u!50 &2629903266403376867
 Rigidbody2D:
