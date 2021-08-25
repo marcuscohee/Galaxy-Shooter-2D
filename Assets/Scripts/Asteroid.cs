@@ -6,6 +6,7 @@ public class Asteroid : MonoBehaviour
 {
     [SerializeField] private float _rotateSpeed = 3.0f;
     [SerializeField] private Animator _onAsteroidDeath;
+    [SerializeField] private SpawnManager _spawnManager;
     void Start()
     {
         _onAsteroidDeath = GameObject.Find("Explosion").GetComponent<Animator>();
@@ -13,12 +14,17 @@ public class Asteroid : MonoBehaviour
         {
             Debug.LogError("The Explosion Animation is NULL");
         }
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        if (_spawnManager == null)
+        {
+            Debug.LogError("The Spawn_Manager is NULL");
+        }
     }
 
 
     void Update()
     {
-        transform.Rotate(new Vector3(0, 0, 3) * _rotateSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.forward * _rotateSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -27,6 +33,7 @@ public class Asteroid : MonoBehaviour
         {
             Destroy(other.gameObject);
             _onAsteroidDeath.SetTrigger("OnAsteroidDeath");
+            _spawnManager.StartSpawning();
             StartCoroutine(AsteroidExplosionRoutine());
         }
 
