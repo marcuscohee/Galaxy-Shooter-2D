@@ -4,17 +4,23 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    //Player Movement
     [SerializeField] private float _speed = 5f;
+    [SerializeField] private bool _isSpeedBoostActive = false;
+    //Firing Laser
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private float _fireRate = 0.15f;
     private float _canFire = -1f;
-    [SerializeField] private int _lives = 3;
-    private SpawnManager _spawnManager;
-    [SerializeField] private bool _isTripleShotActive = false;
     [SerializeField] private GameObject _tripleShot;
-    [SerializeField] private bool _isSpeedBoostActive = false;
-    [SerializeField] private bool _isShieldActive = false;
+    [SerializeField] private bool _isTripleShotActive = false;
+    //Damage
+    [SerializeField] private int _lives = 3;
+    [SerializeField] private GameObject _rightEngine;
+    [SerializeField] private GameObject _leftEngine;
     [SerializeField] private GameObject _shieldVisualizer;
+    [SerializeField] private bool _isShieldActive = false;
+    //SpawnManager/UIManager
+    private SpawnManager _spawnManager;
     [SerializeField] private int _score;
     private UIManager _uiManager;
 
@@ -92,6 +98,7 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
+        
         if(_isShieldActive == true)
         {
             _isShieldActive = false;
@@ -99,7 +106,18 @@ public class Player : MonoBehaviour
             return;
         }
 
+             
         _lives -= 1;
+
+        if (_lives == 2)
+        {
+            _rightEngine.SetActive(true);
+        }
+
+        else if (_lives == 1)
+        {
+            _leftEngine.SetActive(true);
+        }
 
         _uiManager.UpdateLives(_lives);
 
