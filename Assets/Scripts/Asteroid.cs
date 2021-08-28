@@ -39,9 +39,9 @@ public class Asteroid : MonoBehaviour
 
         IEnumerator AsteroidExplosionRoutine()
         {
+            gameObject.GetComponent<PolygonCollider2D>().enabled = false;
             yield return new WaitForSeconds(0.2f);
             gameObject.GetComponent<SpriteRenderer>().enabled = false;
-            gameObject.GetComponent<CircleCollider2D>().enabled = false;
             yield return new WaitForSeconds(1.8f);
             Destroy(this.gameObject);
         }

@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
             }
             _speed = 0;
             _onEnemyDeath.SetTrigger("OnEnemyDeath");
-            StartCoroutine(ExplosionRoutine());
+            GetComponent<PolygonCollider2D>().enabled = false;
             Destroy(this.gameObject, 2.0f);
         }
 
@@ -60,14 +60,9 @@ public class Enemy : MonoBehaviour
             }
             _speed = 0;
             _onEnemyDeath.SetTrigger("OnEnemyDeath");
-            StartCoroutine(ExplosionRoutine());
+            GetComponent<PolygonCollider2D>().enabled = false;
             Destroy(this.gameObject, 2.0f);
         }   
     }
 
-    IEnumerator ExplosionRoutine()
-    {
-        yield return new WaitForSeconds(0.4f);
-        GetComponent<BoxCollider2D>().enabled = false;
-    }
 }
