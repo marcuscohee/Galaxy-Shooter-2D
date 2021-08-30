@@ -7,6 +7,7 @@ public class Asteroid : MonoBehaviour
     [SerializeField] private float _rotateSpeed = 3.0f;
     [SerializeField] private Animator _onAsteroidDeath;
     [SerializeField] private SpawnManager _spawnManager;
+    [SerializeField] private AudioSource _onAsteroidDeathAudioClip;
     void Start()
     {
         _onAsteroidDeath = GameObject.Find("Explosion").GetComponent<Animator>();
@@ -19,6 +20,8 @@ public class Asteroid : MonoBehaviour
         {
             Debug.LogError("The Spawn_Manager is NULL");
         }
+        _onAsteroidDeathAudioClip = GetComponent<AudioSource>();
+        //NULL checked in the Player Script.
     }
 
 
@@ -39,6 +42,7 @@ public class Asteroid : MonoBehaviour
 
         IEnumerator AsteroidExplosionRoutine()
         {
+            _onAsteroidDeathAudioClip.Play();
             gameObject.GetComponent<PolygonCollider2D>().enabled = false;
             yield return new WaitForSeconds(0.2f);
             gameObject.GetComponent<SpriteRenderer>().enabled = false;

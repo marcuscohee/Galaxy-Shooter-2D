@@ -8,10 +8,11 @@ public class Enemy : MonoBehaviour
 
     private Player _player;
     [SerializeField] private Animator _onEnemyDeath;
+    [SerializeField] private AudioSource _onEnemyDeathAudioClip;
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
-        if(_player == null)
+        if (_player == null)
         {
             Debug.LogError("The Player is NULL");
         }
@@ -19,6 +20,11 @@ public class Enemy : MonoBehaviour
         if (_onEnemyDeath == null)
         {
             Debug.LogError("The OnEnemyDeath Animation is NULL");
+        }
+        _onEnemyDeathAudioClip = GetComponent<AudioSource>();
+        if (_onEnemyDeathAudioClip == null)
+        {
+            Debug.LogError("The Enemy Explosion Audio Source is NULL");
         }
     }
 
@@ -47,6 +53,7 @@ public class Enemy : MonoBehaviour
             _speed = 0;
             _onEnemyDeath.SetTrigger("OnEnemyDeath");
             GetComponent<PolygonCollider2D>().enabled = false;
+            _onEnemyDeathAudioClip.Play();
             Destroy(this.gameObject, 2.0f);
         }
 
@@ -61,6 +68,7 @@ public class Enemy : MonoBehaviour
             _speed = 0;
             _onEnemyDeath.SetTrigger("OnEnemyDeath");
             GetComponent<PolygonCollider2D>().enabled = false;
+            _onEnemyDeathAudioClip.Play();
             Destroy(this.gameObject, 2.0f);
         }   
     }

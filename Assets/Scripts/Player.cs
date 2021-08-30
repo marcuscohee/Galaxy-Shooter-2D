@@ -23,6 +23,11 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     [SerializeField] private int _score;
     private UIManager _uiManager;
+    //Sound
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _laserSound;
+    [SerializeField] private AudioClip _powerupSound;
+    [SerializeField] private AudioClip _explosionSound;
 
 
     void Start()
@@ -37,6 +42,11 @@ public class Player : MonoBehaviour
         if (_uiManager == null)
         {
             Debug.LogError("The UI Manager is NULL");
+        }
+        _audioSource = GetComponent<AudioSource>();
+        if(_audioSource == null)
+        {
+            Debug.LogError("The Audio Source on the Player is NULL");
         }
     }
 
@@ -94,6 +104,9 @@ public class Player : MonoBehaviour
         {
             Instantiate(_laserPrefab, transform.position + (Vector3.up * 1.05f), Quaternion.identity);
         }
+
+        _audioSource.clip = _laserSound;
+        _audioSource.Play();
     }
 
     public void Damage()
@@ -124,12 +137,16 @@ public class Player : MonoBehaviour
         if(_lives < 1)
         {
             _spawnManager.OnPlayerDeath();
+            _audioSource.clip = _explosionSound;
+            _audioSource.Play();
             Destroy(this.gameObject);
         }
     }
     public void ActivateTripleShot()
     {
         _isTripleShotActive = true;
+        _audioSource.clip = _powerupSound;
+        _audioSource.Play();
         StartCoroutine(TripleShotPowerDownRoutine());
     }
     IEnumerator TripleShotPowerDownRoutine()
@@ -141,6 +158,8 @@ public class Player : MonoBehaviour
     public void ActivateSpeedBoostPowerup()
     {
         _isSpeedBoostActive = true;
+        _audioSource.clip = _powerupSound;
+        _audioSource.Play();
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
 
@@ -153,6 +172,8 @@ public class Player : MonoBehaviour
     public void ActivateShieldPowerup()
     {
         _isShieldActive = true;
+        _audioSource.clip = _powerupSound;
+        _audioSource.Play();
         _shieldVisualizer.SetActive(true);
     }
 
