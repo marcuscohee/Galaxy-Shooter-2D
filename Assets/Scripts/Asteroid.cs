@@ -35,7 +35,7 @@ public class Asteroid : MonoBehaviour
         if (other.tag == "Laser")
         {
             Destroy(other.gameObject);
-            _onAsteroidDeath.SetTrigger("OnAsteroidDeath");
+            _onAsteroidDeath.SetTrigger("Explosion");
             _spawnManager.StartSpawning();
             StartCoroutine(AsteroidExplosionRoutine());
         }

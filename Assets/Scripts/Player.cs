@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class Player : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip _laserSound;
     [SerializeField] private AudioClip _powerupSound;
     [SerializeField] private AudioClip _explosionSound;
+    //Animation
+    [SerializeField] private GameObject _explosionAnimPrefab;
 
 
     void Start()
@@ -109,6 +112,15 @@ public class Player : MonoBehaviour
         _audioSource.Play();
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Enemy_Laser")
+        {
+            Destroy(other.gameObject);
+            Damage();
+        }
+    }
+
     public void Damage()
     {
         
@@ -139,14 +151,15 @@ public class Player : MonoBehaviour
             _spawnManager.OnPlayerDeath();
             _audioSource.clip = _explosionSound;
             _audioSource.Play();
-            Destroy(this.gameObject);
+            Instantiate(_explosionAnimPrefab, transform.position, Quaternion.identity);
+            Destroy(this.gameObject, 0.25f);
         }
     }
+
     public void ActivateTripleShot()
     {
         _isTripleShotActive = true;
-        _audioSource.clip = _powerupSound;
-        _audioSource.Play();
+        _audioSource.PlayOneShot(_powerupSound, 1);
         StartCoroutine(TripleShotPowerDownRoutine());
     }
     IEnumerator TripleShotPowerDownRoutine()
@@ -158,8 +171,7 @@ public class Player : MonoBehaviour
     public void ActivateSpeedBoostPowerup()
     {
         _isSpeedBoostActive = true;
-        _audioSource.clip = _powerupSound;
-        _audioSource.Play();
+        _audioSource.PlayOneShot(_powerupSound, 1);
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
 
@@ -172,8 +184,7 @@ public class Player : MonoBehaviour
     public void ActivateShieldPowerup()
     {
         _isShieldActive = true;
-        _audioSource.clip = _powerupSound;
-        _audioSource.Play();
+        _audioSource.PlayOneShot(_powerupSound, 1);
         _shieldVisualizer.SetActive(true);
     }
 
