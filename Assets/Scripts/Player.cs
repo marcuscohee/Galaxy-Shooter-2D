@@ -7,7 +7,8 @@ public class Player : MonoBehaviour
 {
     //Player Movement
     [SerializeField] private float _speed = 5f;
-    [SerializeField] private bool _isSpeedBoostActive = false;
+    [SerializeField] private float _speedMultiplier = 2;
+    [SerializeField] private float _thrusterLimit = 100;
     //Firing Laser
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private float _fireRate = 0.15f;
@@ -77,19 +78,21 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-        
-        //movement
-        if(_isSpeedBoostActive == true)
+
+        //thruster
+        if(Input.GetKey(KeyCode.LeftShift) && _thrusterLimit > 0)
         {
-            _speed = 10;
-            transform.Translate(_speed * Time.deltaTime * direction);
+            _thrusterLimit -= (20 * Time.deltaTime);
+            transform.Translate((_speed + 2) * Time.deltaTime * direction);
+            //Boost for 5 seconds, 
+            //then if you don't use it again for 3 seconds, then recharge in 1 second(i'll do this next with the UI display)
         }
         else
         {
-            _speed = 5f;
+            
             transform.Translate(_speed * Time.deltaTime * direction);
         }
-        
+
 
         //vertical player bounds
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
@@ -226,7 +229,7 @@ public class Player : MonoBehaviour
 
     public void ActivateSpeedBoostPowerup()
     {
-        _isSpeedBoostActive = true;
+        _speed *= _speedMultiplier;
         _audioSource.PlayOneShot(_powerupSound, 1);
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
@@ -234,7 +237,7 @@ public class Player : MonoBehaviour
     IEnumerator SpeedBoostPowerDownRoutine()
     {
         yield return new WaitForSeconds(5.0f);
-        _isSpeedBoostActive = false;
+        _speed /= _speedMultiplier;
     }
 
     public void AddScore(int points)
