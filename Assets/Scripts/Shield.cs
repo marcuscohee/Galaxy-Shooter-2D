@@ -5,13 +5,11 @@ using UnityEngine;
 public class Shield : MonoBehaviour
 {
     [SerializeField] private int _shieldHealth = 3;
-    [SerializeField] private bool _isShieldActive = false;
     [SerializeField] private Color[] _color;
-    
+   
     public void ActivateShield()
     {
         gameObject.SetActive(true);
-        _isShieldActive = true;
         _shieldHealth = 3;
         ShieldHealth();
     }
@@ -54,7 +52,6 @@ public class Shield : MonoBehaviour
 
     public void DeactivateShield()
     {
-        _isShieldActive = false;
         GetComponentInParent<Player>().OnShieldBreak();
     }
 

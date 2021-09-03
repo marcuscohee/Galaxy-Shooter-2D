@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image _livesImg;
     [SerializeField] private Text _gameOverText;
     [SerializeField] private Text _restartText;
+    [SerializeField] private Text _ammoCountText;
     [SerializeField] private GameManager _gameManager;
     void Start()
     {
@@ -21,6 +22,12 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("The Game_Manager is NULL");
         }
+    }
+
+    public void AmmoCount(int _ammoCount)
+    {
+        _ammoCountText.text = "Ammo: " + _ammoCount + "/15";
+        //When ammo is used, then display it on screen using current/max form.
     }
 
 

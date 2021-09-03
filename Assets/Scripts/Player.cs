@@ -12,6 +12,9 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private float _fireRate = 0.15f;
     private float _canFire = -1f;
+    [SerializeField] private int _ammoCount = 15;
+    [SerializeField] private GameObject _outOfAmmoLight_Left;
+    [SerializeField] private GameObject _outOfAmmoLight_Right;
     [SerializeField] private GameObject _tripleShot;
     [SerializeField] private bool _isTripleShotActive = false;
     //Damage
@@ -30,7 +33,6 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _laserSound;
     [SerializeField] private AudioClip _powerupSound;
-    [SerializeField] private AudioClip _explosionSound;
 
 
     void Start()
@@ -57,6 +59,7 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("The Player Explosion is NULL");
         }
+        _ammoCount = 15;
     }
 
 
@@ -103,20 +106,50 @@ public class Player : MonoBehaviour
     }
     void FireLaser()
     {
-      _canFire = Time.time + _fireRate;
-      
-        if(_isTripleShotActive == true)
+        
+        if (_ammoCount >= 1)
         {
-            Instantiate(_tripleShot, transform.position, Quaternion.identity);
-        }
-        else
-        {
-            Instantiate(_laserPrefab, transform.position + (Vector3.up * 1.05f), Quaternion.identity);
-        }
+            //if ammo is 1 or more, then fire laser.
+            _ammoCount--;
+            //Subtract 1 from _ammoCount.
+            _canFire = Time.time + _fireRate;
 
-        _audioSource.clip = _laserSound;
-        _audioSource.Play();
+            if (_isTripleShotActive == true)
+            {
+                Instantiate(_tripleShot, transform.position, Quaternion.identity);
+            }
+            else
+            {
+                Instantiate(_laserPrefab, transform.position + (Vector3.up * 1.05f), Quaternion.identity);
+            }
+
+            _audioSource.clip = _laserSound;
+            _audioSource.Play();
+            _uiManager.AmmoCount(_ammoCount);
+            //Send _ammoCount value over to the UIManager.
+        }
+        else if(_ammoCount < 1)
+        {
+            StartCoroutine(WhenOutOfAmmoRoutine());
+            //Makes the ship blink when out of ammo.
+        }
     }
+
+    IEnumerator WhenOutOfAmmoRoutine()
+    {
+        _outOfAmmoLight_Left.gameObject.SetActive(true);
+        _outOfAmmoLight_Right.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        _outOfAmmoLight_Left.gameObject.SetActive(false);
+        _outOfAmmoLight_Right.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.1f);
+        _outOfAmmoLight_Left.gameObject.SetActive(true);
+        _outOfAmmoLight_Right.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        _outOfAmmoLight_Left.gameObject.SetActive(false);
+        _outOfAmmoLight_Right.gameObject.SetActive(false);
+    }
+   
 
     private void OnTriggerEnter2D(Collider2D other)
     {
