@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _speedMultiplier = 2;
     [SerializeField] private float _thrusterLimit = 100;
+    [SerializeField] private bool _isThrusterCoolingDown = false;
     //Firing Laser
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private float _fireRate = 0.15f;
@@ -80,19 +81,31 @@ public class Player : MonoBehaviour
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
 
         //thruster
-        if(Input.GetKey(KeyCode.LeftShift) && _thrusterLimit > 0)
+        if (Input.GetKey(KeyCode.LeftShift) && _thrusterLimit > 0)
         {
+            StopCoroutine("ThrusterCoolDownRoutine");
+            _isThrusterCoolingDown = false;
             _thrusterLimit -= (20 * Time.deltaTime);
             transform.Translate((_speed + 2) * Time.deltaTime * direction);
             //Boost for 5 seconds, 
-            //then if you don't use it again for 3 seconds, then recharge in 1 second(i'll do this next with the UI display)
+            //then if you don't use it again for 2 seconds, then recharge in 1 second(i'll do this next with the UI display)
         }
         else
         {
-            
+            StartCoroutine("ThrusterCoolDownRoutine");
             transform.Translate(_speed * Time.deltaTime * direction);
         }
 
+        if(_thrusterLimit >= 100)
+        {
+            _thrusterLimit = 100;
+        }
+        else if(_isThrusterCoolingDown == true)
+        {
+            _thrusterLimit += (50 * Time.deltaTime);
+        }
+
+        _uiManager.ThrusterGauge(_thrusterLimit);
 
         //vertical player bounds
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
@@ -107,6 +120,14 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(11.3f, transform.position.y, 0);
         }
     }
+
+    IEnumerator ThrusterCoolDownRoutine()
+    {
+        yield return new WaitForSeconds(2.0f);
+        _isThrusterCoolingDown = true;
+    }
+
+
     void FireLaser()
     {
         

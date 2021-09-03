@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text _gameOverText;
     [SerializeField] private Text _restartText;
     [SerializeField] private Text _ammoCountText;
+    [SerializeField] private RectTransform _thrusterScalingBar;
     [SerializeField] private GameManager _gameManager;
     void Start()
     {
@@ -28,6 +29,11 @@ public class UIManager : MonoBehaviour
     {
         _ammoCountText.text = "Ammo: " + _ammoCount + "/15";
         //When ammo is used, then display it on screen using current/max form.
+    }
+
+    public void ThrusterGauge(float thrusterLimit)
+    {
+        _thrusterScalingBar.localScale = new Vector3((thrusterLimit * 0.01f), 1, 1);
     }
 
 
