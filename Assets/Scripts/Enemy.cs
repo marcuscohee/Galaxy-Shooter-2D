@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private AudioClip _explosionClip;
     [SerializeField] private AudioClip _laserClip;
     [SerializeField] private GameObject _enemyLaserPrefab;
+    [SerializeField] private Shield _shield;
     private bool _isEnemyDead = false;
     void Start()
     {
@@ -30,10 +31,16 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("The Enemy Explosion Audio Source is NULL");
         }
-        StartCoroutine(FireEnemyLaser());
+        StartCoroutine(FireEnemyLaserRoutine());
     }
 
     void Update()
+    {
+        CalculateMovement();
+        
+    }
+
+    void CalculateMovement()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
@@ -42,7 +49,6 @@ public class Enemy : MonoBehaviour
             float respawn = Random.Range(-9.5f, 9.5f);
             transform.position = new Vector3(respawn, 7.4f, 0);
         }
-        
     }
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -77,19 +83,39 @@ public class Enemy : MonoBehaviour
             _audioSource.clip = _explosionClip;
             _audioSource.Play();
             Destroy(this.gameObject, 2.0f);
-        }   
+        }
+        if (other.tag == "Shield")
+        {
+            other.GetComponent<Shield>().DamageShield();
+            _isEnemyDead = true;
+            _speed = 0;
+            _onEnemyDeath.SetTrigger("OnEnemyDeath");
+            Destroy(GetComponent<PolygonCollider2D>());
+            _audioSource.clip = _explosionClip;
+            _audioSource.Play();
+            Destroy(this.gameObject, 2.0f);
+        }
     }
 
-    IEnumerator FireEnemyLaser()
+    IEnumerator FireEnemyLaserRoutine()
     {
+        _audioSource.clip = _laserClip;
+        //Assigns the Laser sound effect to the Audio Source component.
+        _audioSource.Play();
+        //Then plays the clip.
+        Instantiate(_enemyLaserPrefab, transform.position + (Vector3.down * 0.75f), Quaternion.identity);
+            //Fires laser at spawn!                (Vector3.down * 0.75f) is the laser offset, same as Player.
         while (true)
         {
             yield return new WaitForSeconds(Random.Range(3f, 7f));
+                //Now the game will wait 3-7 seconds, then call this if statement.
             if (_isEnemyDead == false)
             {
+                //If _isEnemyDead = false, then fire laser again!
+                //If true, then the Enemy is dead and can't fire.
+                Instantiate(_enemyLaserPrefab, transform.position + (Vector3.down * 0.75f), Quaternion.identity);
                 _audioSource.clip = _laserClip;
                 _audioSource.Play();
-                Instantiate(_enemyLaserPrefab, transform.position + (Vector3.down * 0.75f), Quaternion.identity);
             }
         }
     }

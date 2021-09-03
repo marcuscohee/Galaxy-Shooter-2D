@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _leftEngine;
     [SerializeField] private GameObject _shieldVisualizer;
     [SerializeField] private bool _isShieldActive = false;
+    [SerializeField] private Transform _player_Explosion;
+    [SerializeField] private Explosion _player_Explosion_Anim;
     //SpawnManager/UIManager
     private SpawnManager _spawnManager;
     [SerializeField] private int _score;
@@ -29,8 +31,6 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip _laserSound;
     [SerializeField] private AudioClip _powerupSound;
     [SerializeField] private AudioClip _explosionSound;
-    //Animation
-    [SerializeField] private GameObject _explosionAnimPrefab;
 
 
     void Start()
@@ -50,6 +50,12 @@ public class Player : MonoBehaviour
         if(_audioSource == null)
         {
             Debug.LogError("The Audio Source on the Player is NULL");
+        }
+        _player_Explosion = GameObject.Find("Player_Explosion").GetComponent<Transform>();
+        _player_Explosion_Anim = GameObject.Find("Player_Explosion").GetComponent<Explosion>();
+        if(_player_Explosion == null)
+        {
+            Debug.LogError("The Player Explosion is NULL");
         }
     }
 
@@ -72,7 +78,7 @@ public class Player : MonoBehaviour
         //movement
         if(_isSpeedBoostActive == true)
         {
-            _speed = 10f;
+            _speed = 10;
             transform.Translate(_speed * Time.deltaTime * direction);
         }
         else
@@ -115,9 +121,12 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Enemy_Laser")
+            //if Enemy_Laser hits the Player.
         {
             Destroy(other.gameObject);
+                //Destroy the Laser
             Damage();
+                //Then call the Damage() method, thus losing a life!
         }
     }
 
@@ -126,8 +135,6 @@ public class Player : MonoBehaviour
         
         if(_isShieldActive == true)
         {
-            _isShieldActive = false;
-            _shieldVisualizer.SetActive(false);
             return;
         }
 
@@ -148,12 +155,28 @@ public class Player : MonoBehaviour
 
         if(_lives < 1)
         {
+            PlayerDeath();
             _spawnManager.OnPlayerDeath();
-            _audioSource.clip = _explosionSound;
-            _audioSource.Play();
-            Instantiate(_explosionAnimPrefab, transform.position, Quaternion.identity);
-            Destroy(this.gameObject, 0.25f);
         }
+    }
+    
+    void PlayerDeath()
+    {
+        _spawnManager.OnPlayerDeath();
+        _player_Explosion_Anim.OnDeathExplosion();
+        _player_Explosion.position = transform.position;
+        Destroy(this.gameObject);
+    }
+    public void ActivateShieldPowerup()
+    {
+        _isShieldActive = true;
+        _audioSource.PlayOneShot(_powerupSound, 1);
+        _shieldVisualizer.GetComponent<Shield>().ActivateShield();
+    }
+
+    public void OnShieldBreak()
+    {
+        _isShieldActive = false;
     }
 
     public void ActivateTripleShot()
@@ -179,13 +202,6 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
         _isSpeedBoostActive = false;
-    }
-
-    public void ActivateShieldPowerup()
-    {
-        _isShieldActive = true;
-        _audioSource.PlayOneShot(_powerupSound, 1);
-        _shieldVisualizer.SetActive(true);
     }
 
     public void AddScore(int points)

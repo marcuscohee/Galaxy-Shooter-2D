@@ -10,7 +10,7 @@ public class Asteroid : MonoBehaviour
     [SerializeField] private AudioSource _onAsteroidDeathAudioClip;
     void Start()
     {
-        _onAsteroidDeath = GameObject.Find("Explosion").GetComponent<Animator>();
+        _onAsteroidDeath = GameObject.Find("Asteroid_Explosion").GetComponent<Animator>();
         if(_onAsteroidDeath == null)
         {
             Debug.LogError("The Explosion Animation is NULL");

@@ -5,10 +5,12 @@ using UnityEngine.Animations;
 
 public class Explosion : MonoBehaviour
 {
-    
-    void Start()
+    [SerializeField] private AudioSource _audioSource;
+    public void OnDeathExplosion()
     {
+        _audioSource.Play();
         GetComponent<Animator>().SetTrigger("Explosion");
+        Destroy(this.gameObject, 2.0f);
     }
 
 }
