@@ -38,6 +38,9 @@ public class Powerup : MonoBehaviour
                     case 3:
                         player.ExtraLife();
                         break;
+                    case 4:
+                        player.AmmoPickup();
+                        break;
                     default:
                         print("Default Value");
                         break;

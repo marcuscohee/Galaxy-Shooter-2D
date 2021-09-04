@@ -170,6 +170,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void AmmoPickup()
+    {
+        _ammoCount = 15;
+        //Setting the ammo count to max.
+        _uiManager.AmmoCount(_ammoCount);
+        //Tell the UIManager our ammo count.
+        _audioSource.PlayOneShot(_powerupSound, 1);
+        //Powerup Sound
+    }
+
     IEnumerator WhenOutOfAmmoRoutine()
     {
         _outOfAmmoLight_Left.gameObject.SetActive(true);
@@ -248,6 +258,8 @@ public class Player : MonoBehaviour
         _uiManager.UpdateLives(_lives);
         //Send the UiManager that we got an extra life.
             //Then reflect it on the UI.
+        _audioSource.PlayOneShot(_powerupSound, 1);
+        //Powerup Sound
     }
     
     void PlayerDeath()
