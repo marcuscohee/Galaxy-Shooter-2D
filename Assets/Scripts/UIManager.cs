@@ -34,6 +34,8 @@ public class UIManager : MonoBehaviour
     public void ThrusterGauge(float thrusterLimit)
     {
         _thrusterScalingBar.localScale = new Vector3((thrusterLimit * 0.01f), 1, 1);
+        //This is changing the scale of the bar.
+            //Since we used 100 for the _thrusterLimit, you will need to convert it here.
     }
 
 

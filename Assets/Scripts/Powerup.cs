@@ -6,7 +6,7 @@ public class Powerup : MonoBehaviour
 {
     [SerializeField] private float _speed = 3.0f;
     [SerializeField] private int _powerupID;
-    //0 = Triple Shot 1 = Speed Boost 2 = Shields
+    //0 = Triple Shot, 1 = Speed Boost, 2 = Shields, 3 = Extra Life, 4 = Ammo Box
 
     void Update()
     {
@@ -34,6 +34,9 @@ public class Powerup : MonoBehaviour
                         break;
                     case 2:
                         player.ActivateShieldPowerup();
+                        break;
+                    case 3:
+                        player.ExtraLife();
                         break;
                     default:
                         print("Default Value");

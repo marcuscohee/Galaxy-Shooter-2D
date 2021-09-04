@@ -83,29 +83,38 @@ public class Player : MonoBehaviour
         //thruster
         if (Input.GetKey(KeyCode.LeftShift) && _thrusterLimit > 0)
         {
+            //When the Left Shift is pressed and the _thrusterLimit is greater than 0, do this.
             StopCoroutine("ThrusterCoolDownRoutine");
             _isThrusterCoolingDown = false;
+            //Since you are using the Thruster, its to hot to recharge.
             _thrusterLimit -= (20 * Time.deltaTime);
+            //This is the rate of burn which is roughly 5 seconds
             transform.Translate((_speed + 2) * Time.deltaTime * direction);
-            //Boost for 5 seconds, 
-            //then if you don't use it again for 2 seconds, then recharge in 1 second(i'll do this next with the UI display)
+            //Boost for 5 seconds.
         }
         else
         {
+            //When the Left Shift is not pressed, so this.
             StartCoroutine("ThrusterCoolDownRoutine");
+            //This coroutine is below, after 2 seconds, it will fully recharge in 2 seconds
+                //But only if Shift isn't pressed again.
             transform.Translate(_speed * Time.deltaTime * direction);
+            //Normal movement.
         }
 
         if(_thrusterLimit >= 100)
         {
+            //This makes it so _thrusterLimit can't go above 100.
             _thrusterLimit = 100;
         }
         else if(_isThrusterCoolingDown == true)
         {
+            //if allowed, this will recharge the _thrusterLimit in 2 seconds.
             _thrusterLimit += (50 * Time.deltaTime);
         }
 
         _uiManager.ThrusterGauge(_thrusterLimit);
+        //This is used for the Thruster Gauge in the UI.
 
         //vertical player bounds
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), 0);
@@ -125,6 +134,8 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(2.0f);
         _isThrusterCoolingDown = true;
+        //If the thrusters aren't used for 2 seconds.
+            //Start the recharge!
     }
 
 
@@ -215,6 +226,28 @@ public class Player : MonoBehaviour
             PlayerDeath();
             _spawnManager.OnPlayerDeath();
         }
+    }
+
+    public void ExtraLife()
+    {
+        _lives++;
+        //Add a life.
+        if(_lives >= 3)
+        {
+            _lives = 3;
+            _rightEngine.SetActive(false);
+            //Heal the right damaged engine.
+        }
+
+        else if (_lives == 2)
+        {
+            _leftEngine.SetActive(false);
+            //Heal the left damaged engine.
+        }
+
+        _uiManager.UpdateLives(_lives);
+        //Send the UiManager that we got an extra life.
+            //Then reflect it on the UI.
     }
     
     void PlayerDeath()
