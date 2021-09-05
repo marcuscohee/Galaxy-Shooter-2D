@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class SwoopingEnemy : MonoBehaviour
 {
     [SerializeField] private float _speed = 4.0f;
     private Player _player;
@@ -29,17 +29,21 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("The Enemy Explosion Audio Source is NULL");
         }
-        StartCoroutine(FireEnemyLaserRoutine());
+        //random.range(1, 3) will be used to determine its spawn location.
     }
 
     void Update()
     {
         CalculateMovement();
-        
+
     }
 
     void CalculateMovement()
     {
+        //if 1
+            //start on the left
+        //if 2
+            //start on the right
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
         if (transform.position.y < -6.5f)
@@ -47,13 +51,14 @@ public class Enemy : MonoBehaviour
             float respawn = Random.Range(-9.5f, 9.5f);
             transform.position = new Vector3(respawn, 7.4f, 0);
         }
-    } 
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
         {
             Player player = other.transform.GetComponent<Player>();
-            if(player != null)
+            if (player != null)
             {
                 player.Damage();
             }
@@ -91,16 +96,11 @@ public class Enemy : MonoBehaviour
 
     IEnumerator FireEnemyLaserRoutine()
     {
-        _audioSource.clip = _laserClip;
-        //Assigns the Laser sound effect to the Audio Source component.
-        _audioSource.Play();
-        //Then plays the clip.
-        Instantiate(_enemyLaserPrefab, transform.position + (Vector3.down * 0.75f), Quaternion.identity);
-            //Fires laser at spawn!                (Vector3.down * 0.75f) is the laser offset, same as Player.
+
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(3f, 7f));
-                //Now the game will wait 3-7 seconds, then call this if statement.
+            yield return new WaitForSeconds(1f);
+            //Now the game will wait 3-7 seconds, then call this if statement.
             if (_isEnemyDead == false)
             {
                 //If _isEnemyDead = false, then fire laser again!
@@ -111,5 +111,6 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
 
 }
