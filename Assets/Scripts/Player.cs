@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _outOfAmmoLight_Right;
     [SerializeField] private GameObject _tripleShot;
     [SerializeField] private bool _isTripleShotActive = false;
+    [SerializeField] private GameObject _homingDrone;
+    [SerializeField] private bool _isHomingDroneActive = false;
     //Damage
     [SerializeField] private int _lives = 3;
     [SerializeField] private GameObject _rightEngine;
@@ -153,6 +155,10 @@ public class Player : MonoBehaviour
             {
                 Instantiate(_tripleShot, transform.position, Quaternion.identity);
             }
+            else if(_isHomingDroneActive == true)
+            {
+                Instantiate(_homingDrone, transform.position + (Vector3.up * 1.23f), Quaternion.identity);
+            }
             else
             {
                 Instantiate(_laserPrefab, transform.position + (Vector3.up * 1.05f), Quaternion.identity);
@@ -219,6 +225,8 @@ public class Player : MonoBehaviour
              
         _lives -= 1;
 
+        StartCoroutine("InvulnerabilityRoutine");
+
         if (_lives == 2)
         {
             _rightEngine.SetActive(true);
@@ -269,6 +277,30 @@ public class Player : MonoBehaviour
         _player_Explosion.position = transform.position;
         Destroy(this.gameObject);
     }
+   
+
+    IEnumerator InvulnerabilityRoutine()
+    {
+        GetComponent<PolygonCollider2D>().enabled = false;
+            //Turn off the Collider, this makes you invulnerable.
+        GetComponent<SpriteRenderer>().enabled = false;
+            //Turn off the SpriteRenderer to simulate blinking.
+        yield return new WaitForSeconds(0.20f);
+            //Then after 0.20 seconds, turn the SpriteRenderer on.
+        GetComponent<SpriteRenderer>().enabled = true;
+        yield return new WaitForSeconds(0.20f);
+        GetComponent<SpriteRenderer>().enabled = false;
+        yield return new WaitForSeconds(0.20f);
+        GetComponent<SpriteRenderer>().enabled = true;
+        yield return new WaitForSeconds(0.20f);
+        GetComponent<SpriteRenderer>().enabled = false;
+        yield return new WaitForSeconds(0.20f);
+        GetComponent<SpriteRenderer>().enabled = true;
+            //At this point, 1 second has passed and blinked 3 times.
+        GetComponent<PolygonCollider2D>().enabled = true;
+            //Turn the Collider back on, making you vulnerable again.
+    }
+
     public void ActivateShieldPowerup()
     {
         _isShieldActive = true;
@@ -283,14 +315,29 @@ public class Player : MonoBehaviour
 
     public void ActivateTripleShot()
     {
+        StopCoroutine("TripleShotPowerDownRoutine");
         _isTripleShotActive = true;
         _audioSource.PlayOneShot(_powerupSound, 1);
-        StartCoroutine(TripleShotPowerDownRoutine());
+        StartCoroutine("TripleShotPowerDownRoutine");
     }
     IEnumerator TripleShotPowerDownRoutine()
     {
         yield return new WaitForSeconds(5.0f);
         _isTripleShotActive = false;
+    }
+
+    public void ActivateHomingLaserBall()
+    {
+        StopCoroutine("HomingLaserBallPowerDownRoutine");
+        _isHomingDroneActive = true;
+        _audioSource.PlayOneShot(_powerupSound, 1);
+        StartCoroutine("HomingLaserBallPowerDownRoutine");
+    }
+
+    IEnumerator HomingLaserBallPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _isHomingDroneActive = false;
     }
 
     public void ActivateSpeedBoostPowerup()

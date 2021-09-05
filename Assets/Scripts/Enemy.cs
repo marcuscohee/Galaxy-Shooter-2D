@@ -49,52 +49,46 @@ public class Enemy : MonoBehaviour
             float respawn = Random.Range(-9.5f, 9.5f);
             transform.position = new Vector3(respawn, 7.4f, 0);
         }
-    }
+    } 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
         {
-            _isEnemyDead = true;
             Player player = other.transform.GetComponent<Player>();
             if(player != null)
             {
                 player.Damage();
             }
-            _speed = 0;
-            _onEnemyDeath.SetTrigger("OnEnemyDeath");
-            Destroy(GetComponent<PolygonCollider2D>());
-            _audioSource.clip = _explosionClip;
-            _audioSource.Play();
-            
-            Destroy(this.gameObject, 2.0f);
+            EnemyDeath();
         }
 
         if (other.tag == "Laser")
         {
             Destroy(other.gameObject);
-            _isEnemyDead = true;
             if (_player != null)
             {
                 _player.AddScore(10);
             }
-            _speed = 0;
-            _onEnemyDeath.SetTrigger("OnEnemyDeath");
-            Destroy(GetComponent<PolygonCollider2D>());
-            _audioSource.clip = _explosionClip;
-            _audioSource.Play();
-            Destroy(this.gameObject, 2.0f);
+            EnemyDeath();
         }
+
         if (other.tag == "Shield")
         {
             other.GetComponent<Shield>().DamageShield();
-            _isEnemyDead = true;
-            _speed = 0;
-            _onEnemyDeath.SetTrigger("OnEnemyDeath");
-            Destroy(GetComponent<PolygonCollider2D>());
-            _audioSource.clip = _explosionClip;
-            _audioSource.Play();
-            Destroy(this.gameObject, 2.0f);
+            EnemyDeath();
         }
+    }
+
+    void EnemyDeath()
+    {
+        transform.tag = "Targeted_Enemy";
+        _isEnemyDead = true;
+        _speed = 0;
+        _onEnemyDeath.SetTrigger("OnEnemyDeath");
+        Destroy(GetComponent<PolygonCollider2D>());
+        _audioSource.clip = _explosionClip;
+        _audioSource.Play();
+        Destroy(this.gameObject, 2.0f);
     }
 
     IEnumerator FireEnemyLaserRoutine()

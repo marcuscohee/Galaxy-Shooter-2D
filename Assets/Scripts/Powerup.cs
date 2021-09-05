@@ -41,6 +41,9 @@ public class Powerup : MonoBehaviour
                     case 4:
                         player.AmmoPickup();
                         break;
+                    case 5:
+                        player.ActivateHomingLaserBall();
+                        break;
                     default:
                         print("Default Value");
                         break;

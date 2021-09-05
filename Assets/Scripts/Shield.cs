@@ -5,7 +5,6 @@ using UnityEngine;
 public class Shield : MonoBehaviour
 {
     [SerializeField] private int _shieldHealth = 3;
-    [SerializeField] private Color[] _color;
    
     public void ActivateShield()
     {

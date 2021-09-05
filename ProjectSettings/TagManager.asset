@@ -12,6 +12,8 @@ TagManager:
   - Asteroid
   - Enemy_Laser
   - Powerup
+  - HomingLaserBall
+  - Targeted_Enemy
   layers:
   - Default
   - TransparentFX
