@@ -11,6 +11,7 @@ public class SwoopingEnemy : MonoBehaviour
     [SerializeField] private AudioClip _explosionClip;
     [SerializeField] private AudioClip _laserClip;
     [SerializeField] private GameObject _enemyLaserPrefab;
+    [SerializeField] private int _spawnDirection;
     private bool _isEnemyDead = false;
     void Start()
     {
@@ -29,27 +30,43 @@ public class SwoopingEnemy : MonoBehaviour
         {
             Debug.LogError("The Enemy Explosion Audio Source is NULL");
         }
-        //random.range(1, 3) will be used to determine its spawn location.
+        SpawnDirection();
+        StartCoroutine(FireEnemyLaserRoutine());
     }
-
     void Update()
     {
         CalculateMovement();
+    }
 
+    void SpawnDirection()
+    {
+        _spawnDirection = Random.Range(1, 3); //random.range(1, 3) will be used to determine the starting spawn location.
+        if (_spawnDirection == 1) //start on the left
+        {
+            transform.position = new Vector3(-11.1f, 5.6f, 0);
+        }
+        else if (_spawnDirection == 2) //start on the right
+        {
+            transform.position = new Vector3(11.1f, 5.6f, 0);
+        }
     }
 
     void CalculateMovement()
     {
-        //if 1
-            //start on the left
-        //if 2
-            //start on the right
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
-
-        if (transform.position.y < -6.5f)
+        
+        if (_spawnDirection == 1) //start on the left
         {
-            float respawn = Random.Range(-9.5f, 9.5f);
-            transform.position = new Vector3(respawn, 7.4f, 0);
+            transform.Translate(new Vector3(0.87f, -0.13f, 0) * _speed * Time.deltaTime);
+        }
+        else if(_spawnDirection == 2) //start on the right
+        {
+            transform.Translate(new Vector3(-0.87f, -0.13f, 0) * _speed * Time.deltaTime);
+        }
+    
+        if (transform.position.y < 2.3f)
+        {
+            transform.tag = "Enemy"; // if targeted, it will make the drone reroll its target on respawn.
+            SpawnDirection();
         }
     }
 
@@ -100,7 +117,7 @@ public class SwoopingEnemy : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(1f);
-            //Now the game will wait 3-7 seconds, then call this if statement.
+            //Now the game will wait 3-7 seconds, then call the if statement.
             if (_isEnemyDead == false)
             {
                 //If _isEnemyDead = false, then fire laser again!

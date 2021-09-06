@@ -44,6 +44,7 @@ public class Enemy : MonoBehaviour
 
         if (transform.position.y < -6.5f)
         {
+            transform.tag = "Enemy"; // if targeted, it will stop the drone from making a B-line to this Enemy after respawn.
             float respawn = Random.Range(-9.5f, 9.5f);
             transform.position = new Vector3(respawn, 7.4f, 0);
         }

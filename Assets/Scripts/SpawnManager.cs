@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] private GameObject _enemyPrefab;
     [SerializeField] private GameObject _enemyContainer;
+    [SerializeField] private GameObject[] _commonEnemyPrefab;
+    [SerializeField] private GameObject[] _uncommonEnemyPrefab;
     private bool _stopSpawning = false;
-    [SerializeField] private GameObject[] _powerups;
+    [SerializeField] private GameObject[] _commonPowerups;
+    [SerializeField] private GameObject[] _uncommonPowerups;
+    [SerializeField] private GameObject[] _rarePowerups;
+    [SerializeField] private int _chance;
 
     public void StartSpawning()
     {
@@ -15,15 +19,30 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine(SpawnPowerupRoutine());
     }
 
+    private void Update()
+    {
+        _chance = Random.Range(1, 101);
+    }
+
     IEnumerator SpawnEnemyRoutine()
     {
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(2.0f);
         while (_stopSpawning == false)
-        {            
-            Vector3 posToSpawn = new Vector3(Random.Range(-9.5f, 9.5f), 7.4f, 0);
-            GameObject newEnemy = Instantiate(_enemyPrefab, posToSpawn, Quaternion.identity);
-            newEnemy.transform.parent = _enemyContainer.transform;
-            yield return new WaitForSeconds(2.0f);
+        {   
+            if (_chance <= 50)
+            {
+                Vector3 enemySpawn = new Vector3(Random.Range(-9.5f, 9.5f), 7.4f, 0);
+                GameObject newEnemy = Instantiate(_commonEnemyPrefab[Random.Range(0, 1)], enemySpawn, Quaternion.identity);
+                newEnemy.transform.parent = _enemyContainer.transform;
+            }
+            else if (_chance >= 51)
+            {
+                Vector3 swoopingEnemySpawn = new Vector3(11.1f, 5.8f, 0f);
+                GameObject newEnemy = Instantiate(_uncommonEnemyPrefab[Random.Range(0, 1)], swoopingEnemySpawn, Quaternion.identity);
+                newEnemy.transform.parent = _enemyContainer.transform;
+            }
+            
+            yield return new WaitForSeconds(Random.Range(3.0f, 5.0f));
         }
 
     }
@@ -34,10 +53,24 @@ public class SpawnManager : MonoBehaviour
         while (_stopSpawning == false)
         {
             Vector3 posToSpawn = new Vector3(Random.Range(-9.5f, 9.5f), 7.4f, 0);
-            int randomPowerup = Random.Range(0, 6);
-            Instantiate(_powerups[randomPowerup], posToSpawn, Quaternion.identity);
-            yield return new WaitForSeconds(Random.Range(3f, 7f));
+            if (_chance <= 70)
+            {
+                Instantiate(_commonPowerups[Random.Range(0, 4)], posToSpawn, Quaternion.identity);
+                print("Common Powerup");
+            }
+            /*else if (50 < _chance && _chance <= 90)
+            {
+                Instantiate(_uncommonPowerups[Random.Range(0, 1)], posToSpawn, Quaternion.identity);
+                print("Uncommon Powerup");
+            }*/
+            else if (_chance >= 71)
+            {
+                Instantiate(_rarePowerups[Random.Range(0, 2)], posToSpawn, Quaternion.identity);
+                print("Rare Powerup");
+            }
+            yield return new WaitForSeconds(Random.Range(3.0f, 7.0f));
         }
+       
     }
     public void OnPlayerDeath()
     {
