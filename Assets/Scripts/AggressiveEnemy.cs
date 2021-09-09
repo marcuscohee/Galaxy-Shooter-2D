@@ -1,21 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+public class AggressiveEnemy : MonoBehaviour
 {
-    [SerializeField] private float _speed = 4.0f;
+    [SerializeField] private float _speed = 6.0f;
     private Player _player;
+    private Transform _playerPosition;
     [SerializeField] private Animator _onEnemyDeath;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _explosionClip;
-    [SerializeField] private AudioClip _laserClip;
-    [SerializeField] private GameObject _enemyLaserPrefab;
-    private bool _isEnemyDead = false;
+    [SerializeField] private bool _isEnemyDead;
+    [SerializeField] private GameObject _damageAnim;
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null)
+        {
+            Debug.LogError("The Player Script is NULL");
+        }
+        _playerPosition = GameObject.Find("Player").GetComponent<Transform>();
+        if (_playerPosition == null)
         {
             Debug.LogError("The Player is NULL");
         }
@@ -29,14 +35,28 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("The Enemy Explosion Audio Source is NULL");
         }
-        StartCoroutine(FireEnemyLaserRoutine());
     }
 
     void Update()
     {
         CalculateMovement();
-        
+
+        if (Vector3.Distance(_playerPosition.position, transform.position) <= 4f && _isEnemyDead == false)
+        {
+            RammingAttack();
+            //If the Player gets within 4 meters of the Aggressive_Enemy, it will attempt to ram the player before dying.
+                //Once the enemy dies, the animation will continue to move towards the player if _isEnemyDead is false. 
+                    //So once true, the RammingAttack will stop.
+        }
     }
+
+    void RammingAttack()
+    {
+        Vector3 direction = _playerPosition.position - transform.position; //Tracks where the player's location is.
+        transform.Translate(direction * Time.deltaTime); //Moves towards the Player at meters/seconds.
+            //Since speed is already being called, it doesn't need to be here.
+    }
+
 
     void CalculateMovement()
     {
@@ -44,17 +64,16 @@ public class Enemy : MonoBehaviour
 
         if (transform.position.y < -6.5f)
         {
-            transform.tag = "Enemy"; // if targeted, it will stop the drone from making a B-line to this Enemy after respawn.
-            float respawn = Random.Range(-9.5f, 9.5f);
-            transform.position = new Vector3(respawn, 7.4f, 0);
+            EnemyDeath(); //Since this Enemy is already damaged, it dies when it leaves the screen and gives no points.
         }
-    } 
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
         {
             Player player = other.transform.GetComponent<Player>();
-            if(player != null)
+            if (player != null)
             {
                 player.Damage();
             }
@@ -66,7 +85,7 @@ public class Enemy : MonoBehaviour
             Destroy(other.gameObject);
             if (_player != null)
             {
-                _player.AddScore(15);
+                _player.AddScore(50); //Adds 50 points to the UI Display!
             }
             EnemyDeath();
         }
@@ -81,36 +100,13 @@ public class Enemy : MonoBehaviour
     void EnemyDeath()
     {
         transform.tag = "Targeted_Enemy";
-        _isEnemyDead = true;
         _speed = 0;
+        _damageAnim.SetActive(false);
+        _isEnemyDead = true;
         _onEnemyDeath.SetTrigger("OnEnemyDeath");
         Destroy(GetComponent<PolygonCollider2D>());
         _audioSource.clip = _explosionClip;
         _audioSource.Play();
         Destroy(this.gameObject, 2.0f);
     }
-
-    IEnumerator FireEnemyLaserRoutine()
-    {
-        _audioSource.clip = _laserClip;
-        //Assigns the Laser sound effect to the Audio Source component.
-        _audioSource.Play();
-        //Then plays the clip.
-        Instantiate(_enemyLaserPrefab, transform.position + (Vector3.down * 0.75f), Quaternion.identity);
-            //Fires laser at spawn!                (Vector3.down * 0.75f) is the laser offset, same as Player.
-        while (true)
-        {
-            yield return new WaitForSeconds(Random.Range(3f, 7f));
-                //Now the game will wait 3-7 seconds, then call this if statement.
-            if (_isEnemyDead == false)
-            {
-                //If _isEnemyDead = false, then fire laser again!
-                //If true, then the Enemy is dead and can't fire.
-                Instantiate(_enemyLaserPrefab, transform.position + (Vector3.down * 0.75f), Quaternion.identity);
-                _audioSource.clip = _laserClip;
-                _audioSource.Play();
-            }
-        }
-    }
-
 }

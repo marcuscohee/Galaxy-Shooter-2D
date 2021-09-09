@@ -120,9 +120,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rotateSpeed: 20
-  _onAsteroidDeath: {fileID: 0}
+  _onAsteroidDeath: {fileID: 4371842782482273983}
   _spawnManager: {fileID: 0}
-  _onAsteroidDeathAudioClip: {fileID: 0}
+  _onAsteroidDeathAudioClip: {fileID: -1783561759737364555}
 --- !u!60 &1123395264599623199
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -318,7 +318,7 @@ GameObject:
   - component: {fileID: 1124443400296691385}
   - component: {fileID: 4371842782482273983}
   m_Layer: 0
-  m_Name: Explosion
+  m_Name: Asteroid_Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -87,7 +87,7 @@ public class SwoopingEnemy : MonoBehaviour
             Destroy(other.gameObject);
             if (_player != null)
             {
-                _player.AddScore(10);
+                _player.AddScore(25);
             }
             EnemyDeath();
         }
@@ -116,7 +116,7 @@ public class SwoopingEnemy : MonoBehaviour
 
         while (true)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(Random.Range(0.95f, 1.3f));
             //Now the game will wait 3-7 seconds, then call the if statement.
             if (_isEnemyDead == false)
             {
