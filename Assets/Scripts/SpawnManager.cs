@@ -7,6 +7,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject _enemyContainer;
     [SerializeField] private GameObject[] _commonEnemyPrefab;
     [SerializeField] private GameObject[] _uncommonEnemyPrefab;
+    [SerializeField] private GameObject[] _rareEnemyPrefab;
     private bool _stopSpawning = false;
     [SerializeField] private GameObject[] _commonPowerups;
     [SerializeField] private GameObject[] _uncommonPowerups;
@@ -35,10 +36,16 @@ public class SpawnManager : MonoBehaviour
                 GameObject newEnemy = Instantiate(_commonEnemyPrefab[Random.Range(0, 1)], enemySpawn, Quaternion.identity);
                 newEnemy.transform.parent = _enemyContainer.transform;
             }
-            else if (_chance >= 51)
+            else if (_chance >= 51 && _chance <= 80)
             {
                 Vector3 swoopingEnemySpawn = new Vector3(11.1f, 5.8f, 0f);
                 GameObject newEnemy = Instantiate(_uncommonEnemyPrefab[Random.Range(0, 1)], swoopingEnemySpawn, Quaternion.identity);
+                newEnemy.transform.parent = _enemyContainer.transform;
+            }
+            else if (_chance >= 81)
+            {
+                Vector3 enemySpawn = new Vector3(Random.Range(-9.5f, 9.5f), 7.4f, 0);
+                GameObject newEnemy = Instantiate(_rareEnemyPrefab[Random.Range(0, 1)], enemySpawn, Quaternion.identity);
                 newEnemy.transform.parent = _enemyContainer.transform;
             }
             
@@ -55,12 +62,12 @@ public class SpawnManager : MonoBehaviour
             Vector3 posToSpawn = new Vector3(Random.Range(-9.5f, 9.5f), 7.4f, 0);
             if (_chance <= 50)
             {
-                Instantiate(_commonPowerups[Random.Range(0, 3)], posToSpawn, Quaternion.identity);
+                Instantiate(_commonPowerups[Random.Range(0, 1)], posToSpawn, Quaternion.identity);
                 print("Common Powerup");
             }
             else if (51 <= _chance && _chance <= 85)
             {
-                Instantiate(_uncommonPowerups[Random.Range(0, 1)], posToSpawn, Quaternion.identity);
+                Instantiate(_uncommonPowerups[Random.Range(0, 3)], posToSpawn, Quaternion.identity);
                 print("Uncommon Powerup");
             }
             else if (_chance >= 86)
@@ -68,7 +75,7 @@ public class SpawnManager : MonoBehaviour
                 Instantiate(_rarePowerups[Random.Range(0, 2)], posToSpawn, Quaternion.identity);
                 print("Rare Powerup");
             }
-            yield return new WaitForSeconds(Random.Range(3.0f, 7.0f));
+            yield return new WaitForSeconds(Random.Range(3.0f, 5.0f));
         }
        
     }

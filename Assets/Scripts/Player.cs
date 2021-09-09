@@ -38,7 +38,9 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip _laserSound;
     [SerializeField] private AudioClip _powerupSound;
 
-
+    //stop coroutines when picking up a different powerup
+    //powerups give ammo of their type.
+    //no ammo glitch
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);

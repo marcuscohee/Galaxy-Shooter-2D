@@ -205,10 +205,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f50af794ee1d78b4696cadd6feff66a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 4
+  _speed: 6
   _onEnemyDeath: {fileID: 6017093012890281564}
   _audioSource: {fileID: 6839151136693961568}
   _explosionClip: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
+  _isEnemyDead: 0
+  _damageAnim: {fileID: 7048482736762325602}
 --- !u!212 &3924705458686293513
 SpriteRenderer:
   m_ObjectHideFlags: 0
