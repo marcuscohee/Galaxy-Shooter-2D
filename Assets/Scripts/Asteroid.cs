@@ -21,7 +21,10 @@ public class Asteroid : MonoBehaviour
             Debug.LogError("The Spawn_Manager is NULL");
         }
         _onAsteroidDeathAudioClip = GetComponent<AudioSource>();
-        //NULL checked in the Player Script.
+        if (_onAsteroidDeathAudioClip == null)
+        {
+            Debug.LogError("The AudioSource from Asteroid is NULL");
+        }
     }
 
 
@@ -39,15 +42,14 @@ public class Asteroid : MonoBehaviour
             _spawnManager.StartSpawning();
             StartCoroutine(AsteroidExplosionRoutine());
         }
-
-        IEnumerator AsteroidExplosionRoutine()
-        {
-            _onAsteroidDeathAudioClip.Play();
-            gameObject.GetComponent<PolygonCollider2D>().enabled = false;
-            yield return new WaitForSeconds(0.2f);
-            gameObject.GetComponent<SpriteRenderer>().enabled = false;
-            yield return new WaitForSeconds(1.8f);
-            Destroy(this.gameObject);
-        }
+    }
+    IEnumerator AsteroidExplosionRoutine()
+    {
+        _onAsteroidDeathAudioClip.Play();
+        gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        yield return new WaitForSeconds(0.2f);
+        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        yield return new WaitForSeconds(1.8f);
+        Destroy(this.gameObject);
     }
 }

@@ -20,6 +20,11 @@ public class Shield : MonoBehaviour
             Destroy(other.gameObject);
             DamageShield();
         }
+        if (other.tag == "Enemy_Shield")
+        {
+            Destroy(other.gameObject);
+            DamageShield();
+        }
     }
 
     public void DamageShield()

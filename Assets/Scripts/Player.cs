@@ -142,7 +142,6 @@ public class Player : MonoBehaviour
             //Start the recharge!
     }
 
-
     void FireLaser()
     {
         
@@ -177,7 +176,6 @@ public class Player : MonoBehaviour
             //Makes the ship blink when out of ammo.
         }
     }
-
     public void AmmoPickup()
     {
         _ammoCount = 15;
@@ -212,7 +210,7 @@ public class Player : MonoBehaviour
             Destroy(other.gameObject);
                 //Destroy the Laser
             Damage();
-                //Then call the Damage() method, thus losing a life!
+                //Then call the Damage() method.
         }
     }
 
@@ -224,11 +222,8 @@ public class Player : MonoBehaviour
             return;
         }
 
-             
-        _lives -= 1;
-
         StartCoroutine("InvulnerabilityRoutine");
-
+        _lives -= 1;
         if (_lives == 2)
         {
             _rightEngine.SetActive(true);
@@ -282,9 +277,10 @@ public class Player : MonoBehaviour
    
 
     IEnumerator InvulnerabilityRoutine()
-    {
+    { //TODO: Set this to while statement after blink with a int variable that repeats blinking 3 times
+
         GetComponent<PolygonCollider2D>().enabled = false;
-            //Turn off the Collider, this makes you invulnerable.
+        //Turn off the Collider, this makes you invulnerable.
         GetComponent<SpriteRenderer>().enabled = false;
             //Turn off the SpriteRenderer to simulate blinking.
         yield return new WaitForSeconds(0.20f);
@@ -330,13 +326,13 @@ public class Player : MonoBehaviour
 
     public void ActivateHomingLaserBall()
     {
-        StopCoroutine("HomingLaserBallPowerDownRoutine");
+        StopCoroutine("HomingDronePowerDownRoutine");
         _isHomingDroneActive = true;
         _audioSource.PlayOneShot(_powerupSound, 1);
-        StartCoroutine("HomingLaserBallPowerDownRoutine");
+        StartCoroutine("HomingDronePowerDownRoutine");
     }
 
-    IEnumerator HomingLaserBallPowerDownRoutine()
+    IEnumerator HomingDronePowerDownRoutine()
     {
         yield return new WaitForSeconds(5.0f);
         _isHomingDroneActive = false;
@@ -359,7 +355,6 @@ public class Player : MonoBehaviour
     {
         _score += points;
         _uiManager.UpdateScore(_score);
-    }
-    
+    }    
 }
 

@@ -23,7 +23,7 @@ public class HomingDrone: MonoBehaviour
             {
                 transform.Translate(Vector3.up * _speed * Time.deltaTime);
                 
-                return;// since there was no target, theres no need to
+                return;// since there was no target, don't call anything below.
             }
         }
         // This is only called if a target is found.

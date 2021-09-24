@@ -85,7 +85,7 @@ public class AggressiveEnemy : MonoBehaviour
             Destroy(other.gameObject);
             if (_player != null)
             {
-                _player.AddScore(50); //Adds 50 points to the UI Display!
+                _player.AddScore(100); //Adds 100 points to the UI Display.
             }
             EnemyDeath();
         }

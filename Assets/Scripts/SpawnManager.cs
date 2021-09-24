@@ -38,8 +38,8 @@ public class SpawnManager : MonoBehaviour
             }
             else if (_chance >= 51 && _chance <= 80)
             {
-                Vector3 swoopingEnemySpawn = new Vector3(11.1f, 5.8f, 0f);
-                GameObject newEnemy = Instantiate(_uncommonEnemyPrefab[Random.Range(0, 1)], swoopingEnemySpawn, Quaternion.identity);
+                Vector3 enemySpawn = new Vector3(Random.Range(-9.5f, 9.5f), 7.4f, 0);
+                GameObject newEnemy = Instantiate(_uncommonEnemyPrefab[Random.Range(0, 2)], enemySpawn, Quaternion.identity);
                 newEnemy.transform.parent = _enemyContainer.transform;
             }
             else if (_chance >= 81)

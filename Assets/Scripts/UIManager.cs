@@ -36,6 +36,14 @@ public class UIManager : MonoBehaviour
         _thrusterScalingBar.localScale = new Vector3((thrusterLimit * 0.01f), 1, 1);
         //This is changing the scale of the bar.
             //Since we used 100 for the _thrusterLimit, you will need to convert it here.
+        if(thrusterLimit <= 25)
+        {
+            _thrusterScalingBar.GetComponent<Image>().color = Color.red;
+        }
+        else
+        {
+            _thrusterScalingBar.GetComponent<Image>().color = Color.blue;
+        }
     }
 
 

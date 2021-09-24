@@ -53,7 +53,6 @@ public class SwoopingEnemy : MonoBehaviour
 
     void CalculateMovement()
     {
-        
         if (_spawnDirection == 1) //start on the left
         {
             transform.Translate(new Vector3(0.87f, -0.13f, 0) * _speed * Time.deltaTime);
