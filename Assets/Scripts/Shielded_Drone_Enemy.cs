@@ -6,9 +6,8 @@ public class Shielded_Drone_Enemy : MonoBehaviour
 {
     [SerializeField] private float _speed = 4.0f;
     private Player _player;
-    [SerializeField] private Animator _enemyExplosion;
+    [SerializeField] private GameObject _explosionAnimPrefab;
     [SerializeField] private AudioSource _audioSource;
-    [SerializeField] private AudioClip _explosionClip;
     [SerializeField] private AudioClip _laserClip;
     [SerializeField] private GameObject _doubleLaserPrefab;
     [SerializeField] private GameObject _enemyShield;
@@ -20,11 +19,6 @@ public class Shielded_Drone_Enemy : MonoBehaviour
         if (_player == null)
         {
             Debug.LogError("The Player is NULL");
-        }
-        _enemyExplosion = GameObject.Find("Enemy_Explosion").GetComponent<Animator>();
-        if(_enemyExplosion == null)
-        {
-            Debug.LogError("Enemy Explosion Animator is NULL");
         }
         _audioSource = GetComponent<AudioSource>();
         if (_audioSource == null)
@@ -94,15 +88,15 @@ public class Shielded_Drone_Enemy : MonoBehaviour
         transform.tag = "Targeted_Enemy";
         _isEnemyDead = true;
         _speed = 0;
-        Destroy(GetComponent<PolygonCollider2D>());
-        _audioSource.clip = _explosionClip;
-        _audioSource.Play();
         StartCoroutine(ExplosionRoutine());
+        Destroy(GetComponent<PolygonCollider2D>());
+        _audioSource.Play();
         Destroy(this.gameObject, 2.0f);
     }
     IEnumerator ExplosionRoutine()
     {
-        _enemyExplosion.SetTrigger("Explosion");
+        Instantiate(_explosionAnimPrefab, transform.position, Quaternion.identity);
+        //_explosionAnimPrefab.GetComponent<Explosion>().OnDeathExplosion();
         yield return new WaitForSeconds(0.2f);
         GetComponent<SpriteRenderer>().enabled = false;
     }

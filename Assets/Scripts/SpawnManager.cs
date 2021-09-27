@@ -72,7 +72,7 @@ public class SpawnManager : MonoBehaviour
             }
             else if (_chance >= 86)
             {
-                Instantiate(_rarePowerups[Random.Range(0, 2)], posToSpawn, Quaternion.identity);
+                Instantiate(_rarePowerups[Random.Range(0, 3)], posToSpawn, Quaternion.identity);
                 print("Rare Powerup");
             }
             yield return new WaitForSeconds(Random.Range(3.0f, 5.0f));

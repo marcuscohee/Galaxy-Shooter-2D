@@ -21,6 +21,8 @@ public class Player : MonoBehaviour
     [SerializeField] private bool _isTripleShotActive = false;
     [SerializeField] private GameObject _homingDrone;
     [SerializeField] private bool _isHomingDroneActive = false;
+    [SerializeField] private GameObject _sprayShot;
+    [SerializeField] private bool _isSprayShotActive = false;
     //Damage
     [SerializeField] private int _lives = 3;
     [SerializeField] private GameObject _rightEngine;
@@ -58,12 +60,6 @@ public class Player : MonoBehaviour
         if(_audioSource == null)
         {
             Debug.LogError("The Audio Source on the Player is NULL");
-        }
-        _player_Explosion = GameObject.Find("Player_Explosion").GetComponent<Transform>();
-        _player_Explosion_Anim = GameObject.Find("Player_Explosion").GetComponent<Explosion>();
-        if(_player_Explosion == null)
-        {
-            Debug.LogError("The Player Explosion is NULL");
         }
         _ammoCount = 15;
     }
@@ -159,6 +155,10 @@ public class Player : MonoBehaviour
             else if(_isHomingDroneActive == true)
             {
                 Instantiate(_homingDrone, transform.position + (Vector3.up * 1.23f), Quaternion.identity);
+            }
+            else if(_isSprayShotActive == true)
+            {
+                Instantiate(_sprayShot, transform.position, Quaternion.identity);
             }
             else
             {
@@ -270,7 +270,7 @@ public class Player : MonoBehaviour
     void PlayerDeath()
     {
         _spawnManager.OnPlayerDeath();
-        _player_Explosion_Anim.OnDeathExplosion();
+        _player_Explosion.gameObject.SetActive(true);
         _player_Explosion.position = transform.position;
         Destroy(this.gameObject);
     }
@@ -311,9 +311,16 @@ public class Player : MonoBehaviour
         _isShieldActive = false;
     }
 
+    void AmmoRefresher()
+    {
+        _isSprayShotActive = false;
+        _isTripleShotActive = false;
+        _isHomingDroneActive = false;
+    }
     public void ActivateTripleShot()
     {
         StopCoroutine("TripleShotPowerDownRoutine");
+        AmmoRefresher();
         _isTripleShotActive = true;
         _audioSource.PlayOneShot(_powerupSound, 1);
         StartCoroutine("TripleShotPowerDownRoutine");
@@ -324,9 +331,25 @@ public class Player : MonoBehaviour
         _isTripleShotActive = false;
     }
 
-    public void ActivateHomingLaserBall()
+    public void ActivateSprayShot()
+    {
+        StopCoroutine("SprayShotPowerDownRoutine");
+        AmmoRefresher();
+        _isSprayShotActive = true;
+        _audioSource.PlayOneShot(_powerupSound, 1);
+        StartCoroutine("SprayShotPowerDownRoutine");
+    }
+
+    IEnumerator SprayShotPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _isSprayShotActive = false;
+    }
+
+    public void ActivateHomingDrone()
     {
         StopCoroutine("HomingDronePowerDownRoutine");
+        AmmoRefresher();
         _isHomingDroneActive = true;
         _audioSource.PlayOneShot(_powerupSound, 1);
         StartCoroutine("HomingDronePowerDownRoutine");

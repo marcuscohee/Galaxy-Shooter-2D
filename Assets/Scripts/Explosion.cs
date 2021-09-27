@@ -6,7 +6,7 @@ using UnityEngine.Animations;
 public class Explosion : MonoBehaviour
 {
     [SerializeField] private AudioSource _audioSource;
-    public void OnDeathExplosion()
+    public void Start()
     {
         _audioSource.Play();
         GetComponent<Animator>().SetTrigger("Explosion");

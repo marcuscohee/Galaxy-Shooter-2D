@@ -240,6 +240,9 @@ MonoBehaviour:
   _homingDrone: {fileID: 5258901916178042459, guid: 59b159250b4bd35438c1ee5a2fd9113f,
     type: 3}
   _isHomingDroneActive: 0
+  _sprayShot: {fileID: 6506678266772526803, guid: 0d2cb4e5b1323514c83a2f6e66f33704,
+    type: 3}
+  _isSprayShotActive: 0
   _lives: 3
   _rightEngine: {fileID: 118303344}
   _leftEngine: {fileID: 2063483878}
@@ -638,6 +641,7 @@ MonoBehaviour:
   _rarePowerups:
   - {fileID: 729055175758540481, guid: 55f02c47951c71d4aa7e2af27d9e482c, type: 3}
   - {fileID: 4114074834471618189, guid: 818455b9d56a163459713776353cb27d, type: 3}
+  - {fileID: 5955119906077872976, guid: c77687106b70e4e4796f4e8582547b22, type: 3}
   _chance: 0
 --- !u!4 &141714188
 Transform:
@@ -2678,7 +2682,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &1994357050347528954
 AudioSource:
   m_ObjectHideFlags: 0
