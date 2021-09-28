@@ -22,17 +22,26 @@ public class Powerup : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
-
-        if (_isPlayerPullingPowerups == true)
+        if (_isPlayerPullingPowerups == true && _player != null)
         {
-            
+            Vector3 direction = _player.position - transform.position;
+            direction.Normalize();
+            transform.Translate(direction * _speed * 1.5f * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(Vector3.down * _speed * Time.deltaTime);
         }
         
         if(transform.position.y < -5.8f)
         {
             Destroy(this.gameObject);
         }
+    }
+
+    public void PlayerIsPullingPowerup()
+    {
+        _isPlayerPullingPowerups = true;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

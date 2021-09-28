@@ -38,9 +38,9 @@ public class HomingDrone: MonoBehaviour
 
     public void ReleaseDrone()
     {
-        _speed = 8;
-        _standby = false;
         transform.parent = null;
+        _standby = false;
+        _speed = 8;
     }
 
     bool AcquireTarget()
@@ -51,9 +51,9 @@ public class HomingDrone: MonoBehaviour
             int _chosenTarget = Random.Range(0, allTargets.Length);//variable to choose its target at random.
             _target = allTargets[_chosenTarget].transform; // Since _target is a Transform variable, it finds the chosenTarget's Transform, then homes on it!
             _target.tag = "Targeted_Enemy";//When an Target is chosen, change its tag to Targeted.Enemy so it can't be targeted again.
-            return true;// return and say that AcquireTarget = true.
+            return true;// return and say that AcquireTarget() = true.
         }
-        else //if there are no targets, then return and call AcquireTarget() false.
+        else //if there are no targets, then return and say that AcquireTarget() = false.
         {
             _target = null;
             return false;

@@ -180,4 +180,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 3
+  _player: {fileID: 0}
+  _isPlayerPullingPowerups: 0
   _powerupID: 4

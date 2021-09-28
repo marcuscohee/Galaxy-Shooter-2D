@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 5955119906077872978}
   - component: {fileID: 5955119906077872977}
   m_Layer: 0
-  m_Name: Spray_Shot
-  m_TagString: Untagged
+  m_Name: Spray_Shot_Powerup
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -283,4 +283,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 3
+  _player: {fileID: 0}
+  _isPlayerPullingPowerups: 0
   _powerupID: 6

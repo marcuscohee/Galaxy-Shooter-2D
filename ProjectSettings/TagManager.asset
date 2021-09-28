@@ -16,6 +16,7 @@ TagManager:
   - Targeted_Enemy
   - Enemy_Shield
   - Drone
+  - Pulled_Powerup
   layers:
   - Default
   - TransparentFX

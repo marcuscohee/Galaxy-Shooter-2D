@@ -11,7 +11,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text _gameOverText;
     [SerializeField] private Text _restartText;
     [SerializeField] private Text _laserAmmoCountText;
-    [SerializeField] private Text _droneAmmoCountText;
     [SerializeField] private RectTransform _thrusterScalingBar;
     [SerializeField] private GameManager _gameManager;
     void Start()
@@ -30,12 +29,6 @@ public class UIManager : MonoBehaviour
     {
         _laserAmmoCountText.text = _laserCount + "/15";
         //When lasers are used, then display it on screen using current/max form.
-    }
-
-    public void DroneCount(int _droneCount)
-    {
-        _droneAmmoCountText.text = _droneCount + "/4";
-        //When drones are used, then display it on screen using current/max form.
     }
 
     public void ThrusterGauge(float thrusterLimit)

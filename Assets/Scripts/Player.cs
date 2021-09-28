@@ -69,6 +69,11 @@ public class Player : MonoBehaviour
         {
             FireLaser();
         }
+        
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            PullPowerups();
+        }
     }
     void CalculateMovement()
     {
@@ -234,6 +239,7 @@ public class Player : MonoBehaviour
 
         if(_lives < 1)
         {
+            _lives = 0;
             PlayerDeath();
             _spawnManager.OnPlayerDeath();
         }
@@ -293,6 +299,17 @@ public class Player : MonoBehaviour
             //At this point, 1 second has passed and blinked 3 times.
         GetComponent<PolygonCollider2D>().enabled = true;
             //Turn the Collider back on, making you vulnerable again.
+    }
+
+    void PullPowerups()
+    {
+        GameObject[] callPowerups = GameObject.FindGameObjectsWithTag("Powerup");
+        if (callPowerups.Length >= 1)
+        {
+            Debug.Log("Powerups on screen: " + callPowerups.Length);
+            callPowerups[0].GetComponent<Powerup>().PlayerIsPullingPowerup();
+            callPowerups[0].tag = "Pulled_Powerup";
+        }
     }
 
     public void ActivateShieldPowerup()
