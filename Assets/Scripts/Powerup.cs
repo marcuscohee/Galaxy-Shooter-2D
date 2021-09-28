@@ -5,16 +5,34 @@ using UnityEngine;
 public class Powerup : MonoBehaviour
 {
     [SerializeField] private float _speed = 3.0f;
+    [SerializeField] private Transform _player;
+    [SerializeField] private bool _isPlayerPullingPowerups = false;
     [SerializeField] private int _powerupID;
     //0 = Triple Shot, 1 = Speed Boost, 2 = Shields, 3 = Extra Life, 4 = Ammo Box, 5 = Homing Drone, 6 = Spray Shot
+
+    private void Start()
+    {
+        _player = GameObject.Find("Player").GetComponent<Transform>();
+        if(_player == null)
+        {
+            Debug.LogError("The Player is NULL");
+        }
+        _isPlayerPullingPowerups = false;
+    }
 
     void Update()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
+
+        if (_isPlayerPullingPowerups == true)
+        {
+            
+        }
+        
         if(transform.position.y < -5.8f)
         {
             Destroy(this.gameObject);
-        }        
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)

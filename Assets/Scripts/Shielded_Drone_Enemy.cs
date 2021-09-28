@@ -74,6 +74,16 @@ public class Shielded_Drone_Enemy : MonoBehaviour
             other.GetComponent<Shield>().DamageShield();
             EnemyDeath();
         }
+
+        if (other.tag == "Drone")
+        {
+            Destroy(other.gameObject);
+            if (_player != null)
+            {
+                _player.AddScore(50);
+            }
+            EnemyDeath();
+        }
     }
 
     void EnemyDeath()

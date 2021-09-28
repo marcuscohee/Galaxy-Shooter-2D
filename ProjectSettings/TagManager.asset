@@ -15,6 +15,7 @@ TagManager:
   - HomingLaserBall
   - Targeted_Enemy
   - Enemy_Shield
+  - Drone
   layers:
   - Default
   - TransparentFX

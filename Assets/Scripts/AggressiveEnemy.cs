@@ -95,6 +95,16 @@ public class AggressiveEnemy : MonoBehaviour
             other.GetComponent<Shield>().DamageShield();
             EnemyDeath();
         }
+
+        if (other.tag == "Drone")
+        {
+            Destroy(other.gameObject);
+            if (_player != null)
+            {
+                _player.AddScore(100);
+            }
+            EnemyDeath();
+        }
     }
 
     void EnemyDeath()

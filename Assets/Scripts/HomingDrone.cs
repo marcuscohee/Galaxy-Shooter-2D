@@ -4,32 +4,43 @@ using UnityEngine;
 
 public class HomingDrone: MonoBehaviour
 {
-    [SerializeField] private float _speed = 3;
+    [SerializeField] private float _speed = 0;
     [SerializeField] private Transform _target;
+    [SerializeField] private bool _standby = true;
 
     //Thank you GDHQ for the tutorial on lockon missles!
     //It helped a lot! There were lots of bugs I had to work out but I learned a lot!
     void Update()
     {
-        if (transform.position.y > 8f) // if the Drone goes above 8y, then clean it up.
+        if(_standby == false)
         {
-            Destroy(this.gameObject);
-        }
-
-        if (_target == null)
-        {
-            bool targetFound = AcquireTarget(); //ask if target is found, if true, skip the if statement.
-            if (targetFound == false) // If false, travel up and act like a normal Laser.
+            if (transform.position.y > 8f) // if the Drone goes above 8y, then clean it up.
             {
-                transform.Translate(Vector3.up * _speed * Time.deltaTime);
-                
-                return;// since there was no target, don't call anything below.
+                Destroy(this.gameObject);
             }
+
+            if (_target == null)
+            {
+                bool targetFound = AcquireTarget(); //ask if target is found, if true, skip the if statement.
+                if (targetFound == false) // If false, travel up and act like a normal Laser.
+                {
+                    transform.Translate(Vector3.up * _speed * Time.deltaTime);
+
+                    return;// since there was no target, don't call anything below.
+                }
+            }
+            // This is only called if a target is found.
+            Vector3 direction = _target.position - transform.position; // How the Drone can track the Enemy.
+            direction.Normalize(); // This makes "direction" = 1. If this is not there and the Enemy is far away, it will travel really fast towards it.
+            transform.Translate(direction * _speed * Time.deltaTime); //Travel at _speed towards the Enemy at meter/second.
         }
-        // This is only called if a target is found.
-        Vector3 direction = _target.position - transform.position; // How the Drone can track the Enemy.
-        direction.Normalize(); // This makes "direction" = 1. If this is not there and the Enemy is far away, it will travel really fast towards it.
-        transform.Translate(direction * _speed * Time.deltaTime); //Travel at _speed towards the Enemy at meter/second.
+    }
+
+    public void ReleaseDrone()
+    {
+        _speed = 8;
+        _standby = false;
+        transform.parent = null;
     }
 
     bool AcquireTarget()

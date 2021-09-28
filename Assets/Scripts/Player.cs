@@ -14,13 +14,12 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private float _fireRate = 0.15f;
     private float _canFire = -1f;
-    [SerializeField] private int _ammoCount = 15;
+    [SerializeField] private int _laserCount = 15;
     [SerializeField] private GameObject _outOfAmmoLight_Left;
     [SerializeField] private GameObject _outOfAmmoLight_Right;
     [SerializeField] private GameObject _tripleShot;
     [SerializeField] private bool _isTripleShotActive = false;
-    [SerializeField] private GameObject _homingDrone;
-    [SerializeField] private bool _isHomingDroneActive = false;
+    [SerializeField] private DroneManager[] _droneManager;
     [SerializeField] private GameObject _sprayShot;
     [SerializeField] private bool _isSprayShotActive = false;
     //Damage
@@ -40,9 +39,6 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip _laserSound;
     [SerializeField] private AudioClip _powerupSound;
 
-    //stop coroutines when picking up a different powerup
-    //powerups give ammo of their type.
-    //no ammo glitch
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -61,7 +57,7 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("The Audio Source on the Player is NULL");
         }
-        _ammoCount = 15;
+        _laserCount = 15;
     }
 
 
@@ -141,20 +137,16 @@ public class Player : MonoBehaviour
     void FireLaser()
     {
         
-        if (_ammoCount >= 1)
+        if (_laserCount >= 1)
         {
             //if ammo is 1 or more, then fire laser.
-            _ammoCount--;
+            _laserCount--;
             //Subtract 1 from _ammoCount.
             _canFire = Time.time + _fireRate;
 
             if (_isTripleShotActive == true)
             {
                 Instantiate(_tripleShot, transform.position, Quaternion.identity);
-            }
-            else if(_isHomingDroneActive == true)
-            {
-                Instantiate(_homingDrone, transform.position + (Vector3.up * 1.23f), Quaternion.identity);
             }
             else if(_isSprayShotActive == true)
             {
@@ -167,10 +159,10 @@ public class Player : MonoBehaviour
 
             _audioSource.clip = _laserSound;
             _audioSource.Play();
-            _uiManager.AmmoCount(_ammoCount);
+            _uiManager.LaserCount(_laserCount);
             //Send _ammoCount value over to the UIManager.
         }
-        else if(_ammoCount < 1)
+        else if(_laserCount < 1)
         {
             StartCoroutine(WhenOutOfAmmoRoutine());
             //Makes the ship blink when out of ammo.
@@ -178,9 +170,13 @@ public class Player : MonoBehaviour
     }
     public void AmmoPickup()
     {
-        _ammoCount = 15;
-        //Setting the ammo count to max.
-        _uiManager.AmmoCount(_ammoCount);
+        _laserCount += 5;
+        //Giving the Player 5 more ammo.
+        if(_laserCount >= 15)
+        {
+            _laserCount = 15;
+        }
+        _uiManager.LaserCount(_laserCount);
         //Tell the UIManager our ammo count.
         _audioSource.PlayOneShot(_powerupSound, 1);
         //Powerup Sound
@@ -315,7 +311,6 @@ public class Player : MonoBehaviour
     {
         _isSprayShotActive = false;
         _isTripleShotActive = false;
-        _isHomingDroneActive = false;
     }
     public void ActivateTripleShot()
     {
@@ -348,17 +343,12 @@ public class Player : MonoBehaviour
 
     public void ActivateHomingDrone()
     {
-        StopCoroutine("HomingDronePowerDownRoutine");
-        AmmoRefresher();
-        _isHomingDroneActive = true;
         _audioSource.PlayOneShot(_powerupSound, 1);
-        StartCoroutine("HomingDronePowerDownRoutine");
-    }
-
-    IEnumerator HomingDronePowerDownRoutine()
-    {
-        yield return new WaitForSeconds(5.0f);
-        _isHomingDroneActive = false;
+        //when you pick up a drone powerup, add all 4 drones around the player.
+        _droneManager[0].GetComponent<DroneManager>().DronePickup();
+        _droneManager[1].GetComponent<DroneManager>().DronePickup();
+        _droneManager[2].GetComponent<DroneManager>().DronePickup();
+        _droneManager[3].GetComponent<DroneManager>().DronePickup();
     }
 
     public void ActivateSpeedBoostPowerup()
@@ -380,4 +370,3 @@ public class Player : MonoBehaviour
         _uiManager.UpdateScore(_score);
     }    
 }
-

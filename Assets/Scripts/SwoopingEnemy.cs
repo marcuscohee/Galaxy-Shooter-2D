@@ -96,6 +96,17 @@ public class SwoopingEnemy : MonoBehaviour
             other.GetComponent<Shield>().DamageShield();
             EnemyDeath();
         }
+
+        if (other.tag == "Drone")
+        {
+            Destroy(other.gameObject);
+            if (_player != null)
+            {
+                _player.AddScore(25);
+            }
+            EnemyDeath();
+        }
+
     }
 
     void EnemyDeath()

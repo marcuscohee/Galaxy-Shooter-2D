@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 5440406110614997316}
   - component: {fileID: 5440406110614997317}
   m_Layer: 0
-  m_Name: Ammo
-  m_TagString: Untagged
+  m_Name: Ammo_Crate
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
