@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     [SerializeField] private DroneManager[] _droneManager;
     [SerializeField] private GameObject _sprayShot;
     [SerializeField] private bool _isSprayShotActive = false;
+    [SerializeField] private bool _areLasersJammed = false;
     //Damage
     [SerializeField] private int _lives = 3;
     [SerializeField] private GameObject _rightEngine;
@@ -65,7 +66,7 @@ public class Player : MonoBehaviour
     {
         CalculateMovement();
 
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        if (Input.GetKeyDown(KeyCode.Space) && _areLasersJammed == false && Time.time > _canFire)
         {
             FireLaser();
         }
@@ -201,7 +202,18 @@ public class Player : MonoBehaviour
         _outOfAmmoLight_Left.gameObject.SetActive(false);
         _outOfAmmoLight_Right.gameObject.SetActive(false);
     }
+
+    public void JamLasers()
+    {
+        _areLasersJammed = true;
+        StartCoroutine(UnjammingRoutine());
+    }
    
+    IEnumerator UnjammingRoutine()
+    {
+        yield return new WaitForSeconds(3.0f);
+        _areLasersJammed = false;
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {

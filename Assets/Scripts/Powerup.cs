@@ -8,7 +8,7 @@ public class Powerup : MonoBehaviour
     [SerializeField] private Transform _player;
     [SerializeField] private bool _isPlayerPullingPowerups = false;
     [SerializeField] private int _powerupID;
-    //0 = Triple Shot, 1 = Speed Boost, 2 = Shields, 3 = Extra Life, 4 = Ammo Box, 5 = Homing Drone, 6 = Spray Shot
+    //0 = Triple Shot, 1 = Speed Boost, 2 = Shields, 3 = Extra Life, 4 = Ammo Box, 5 = Homing Drone, 6 = Spray Shot, 7 = Laser Jammer
 
     private void Start()
     {
@@ -30,7 +30,12 @@ public class Powerup : MonoBehaviour
         }
         else
         {
-            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+            transform.Translate(Vector3.down * _speed * Time.deltaTime, Space.World);
+        }
+
+        if(_powerupID == 7)
+        {
+            transform.Rotate(Vector3.forward * 20 * Time.deltaTime);
         }
         
         if(transform.position.y < -5.8f)
@@ -74,10 +79,12 @@ public class Powerup : MonoBehaviour
                     case 6:
                         player.ActivateSprayShot();
                         break;
+                    case 7:
+                        player.JamLasers();
+                        break;
                     default:
                         print("Default Value");
                         break;
-
                 }
                 
             }
