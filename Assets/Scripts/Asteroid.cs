@@ -39,7 +39,6 @@ public class Asteroid : MonoBehaviour
         {
             Destroy(other.gameObject);
             _onAsteroidDeath.SetTrigger("Explosion");
-            _spawnManager.StartSpawning();
             StartCoroutine(AsteroidExplosionRoutine());
         }
     }
@@ -50,6 +49,7 @@ public class Asteroid : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
         yield return new WaitForSeconds(1.8f);
+        _spawnManager.StartSpawning();
         Destroy(this.gameObject);
     }
 }

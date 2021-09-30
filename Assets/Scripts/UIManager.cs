@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image _livesImg;
     [SerializeField] private Text _gameOverText;
     [SerializeField] private Text _restartText;
+    [SerializeField] private Text _waveDisplay;
     [SerializeField] private Text _laserAmmoCountText;
     [SerializeField] private RectTransform _thrusterScalingBar;
     [SerializeField] private GameManager _gameManager;
@@ -59,6 +60,23 @@ public class UIManager : MonoBehaviour
         {
             GameOverSequence();
         }
+    }
+
+    public void WaveDisplay(int wave)
+    {
+        _waveDisplay.text = "WAVE: " + wave;
+        if(wave == 11)
+        {
+            _waveDisplay.text = "!!!BOSS INCOMING!!!";
+        }
+        StartCoroutine(WaveDisplayRoutine());
+    }
+
+    IEnumerator WaveDisplayRoutine()
+    {
+        _waveDisplay.gameObject.SetActive(true);
+        yield return new WaitForSeconds(4.5f);
+        _waveDisplay.gameObject.SetActive(false);
     }
 
     void GameOverSequence()
