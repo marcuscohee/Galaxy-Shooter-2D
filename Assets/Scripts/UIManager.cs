@@ -8,11 +8,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text _scoreText;
     [SerializeField] private Sprite[] _livesSprites;
     [SerializeField] private Image _livesImg;
+    [SerializeField] private Text _youWinText;
     [SerializeField] private Text _gameOverText;
     [SerializeField] private Text _restartText;
     [SerializeField] private Text _waveDisplay;
     [SerializeField] private Text _laserAmmoCountText;
     [SerializeField] private RectTransform _thrusterScalingBar;
+    [SerializeField] private RectTransform _bossHealthBar;
+    [SerializeField] private Text _bossHealthText;
     [SerializeField] private GameManager _gameManager;
     void Start()
     {
@@ -47,6 +50,25 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void BossWave()
+    {
+        _bossHealthBar.gameObject.SetActive(true);
+        _bossHealthText.gameObject.SetActive(true);
+    }
+
+    public void BossHealth(float bossHealth)
+    {
+        _bossHealthBar.localScale = new Vector3((bossHealth * 0.01f * 2), 1, 1);
+
+        if(bossHealth <= 0)
+        {
+            _bossHealthBar.gameObject.SetActive(false);
+            _bossHealthText.gameObject.SetActive(false);
+            YouWin();
+            _gameManager.GameOver();
+        }
+    }
+
 
     public void UpdateScore(int playerScore)
     {
@@ -77,6 +99,12 @@ public class UIManager : MonoBehaviour
         _waveDisplay.gameObject.SetActive(true);
         yield return new WaitForSeconds(4.5f);
         _waveDisplay.gameObject.SetActive(false);
+    }
+
+    public void YouWin()
+    {
+        _restartText.gameObject.SetActive(true);
+        _youWinText.gameObject.SetActive(true);
     }
 
     void GameOverSequence()

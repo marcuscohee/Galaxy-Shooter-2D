@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     [SerializeField] private bool _isShieldActive = false;
     [SerializeField] private Transform _player_Explosion;
     [SerializeField] private Explosion _player_Explosion_Anim;
+    [SerializeField] private Boss _boss;
     //SpawnManager/UIManager
     private SpawnManager _spawnManager;
     [SerializeField] private int _score;

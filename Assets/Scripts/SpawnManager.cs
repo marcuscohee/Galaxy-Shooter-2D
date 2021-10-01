@@ -8,6 +8,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject[] _commonEnemyPrefab;
     [SerializeField] private GameObject[] _uncommonEnemyPrefab;
     [SerializeField] private GameObject[] _rareEnemyPrefab;
+    [SerializeField] private GameObject _bossPrefab;
     [SerializeField] private int _waveNumber = 1;
     [SerializeField] private bool _canSpawn = false;
     [SerializeField] private int _enemiesSpawned = 0;
@@ -54,7 +55,14 @@ public class SpawnManager : MonoBehaviour
         _UIManager.WaveDisplay(_waveNumber);
         yield return new WaitForSeconds(5.0f);
         _canSpawn = true;
-        StartCoroutine(SpawnEnemyRoutine());
+        if (_waveNumber <= 10)
+        {
+            StartCoroutine(SpawnEnemyRoutine());
+        }
+        else
+        {
+            BossWave();
+        }
         StartCoroutine(SpawnPowerupRoutine());
     }
     IEnumerator SpawnEnemyRoutine()
@@ -89,6 +97,18 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
+    void BossWave()
+    {
+        Vector3 bossSpawn = new Vector3(0, 10, 0);
+        GameObject boss = Instantiate(_bossPrefab, bossSpawn, Quaternion.identity);
+        boss.transform.parent = _enemyContainer.transform;
+    }
+
+    public void OnBossDeath()
+    {
+        _canSpawn = false;
+    }
+
     IEnumerator SpawnPowerupRoutine()
     {
         while (_areEnemiesStillSpawned == true || _canSpawn == true)
@@ -116,5 +136,9 @@ public class SpawnManager : MonoBehaviour
     public void OnPlayerDeath()
     {
         _canSpawn = false;
+        if(_waveNumber == 11)
+        {
+            _bossPrefab.GetComponent<Boss>().OnPlayerDeath();
+        }
     }
 }
