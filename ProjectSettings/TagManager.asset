@@ -18,6 +18,7 @@ TagManager:
   - Drone
   - Pulled_Powerup
   - Negative Powerup
+  - Boss
   layers:
   - Default
   - TransparentFX

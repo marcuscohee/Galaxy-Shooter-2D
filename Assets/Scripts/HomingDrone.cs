@@ -46,12 +46,18 @@ public class HomingDrone: MonoBehaviour
     bool AcquireTarget()
     {
         GameObject[] allTargets = GameObject.FindGameObjectsWithTag("Enemy"); //Finds targets and adds them to an array.
-        if (allTargets.Length > 0)//if there is at least one target, then continue.
+        GameObject[] boss = GameObject.FindGameObjectsWithTag("Boss"); //Finds boss
+        if (allTargets.Length > 0 || boss.Length > 0)//if there is at least one target, then continue.
         {
             int _chosenTarget = Random.Range(0, allTargets.Length);//variable to choose its target at random.
-            _target = allTargets[_chosenTarget].transform; // Since _target is a Transform variable, it finds the chosenTarget's Transform, then homes on it!
-            _target.tag = "Targeted_Enemy";//When an Target is chosen, change its tag to Targeted.Enemy so it can't be targeted again.
-            return true;// return and say that AcquireTarget() = true.
+            _target = allTargets[_chosenTarget].transform; // Since _target is a Transform variable, it finds the chosen Target's Transform, then homes on it!
+            _target = boss[_chosenTarget].transform; // target boss
+            _target.tag = "Targeted_Enemy"; //When an Target is chosen, change its tag to Targeted.Enemy so it can't be targeted again.
+            if(_target.tag == "Boss")
+            {
+                _target.tag = "Boss";
+            }
+            return true; // return and say that AcquireTarget() = true.
         }
         else //if there are no targets, then return and say that AcquireTarget() = false.
         {

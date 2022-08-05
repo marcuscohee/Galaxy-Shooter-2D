@@ -131,6 +131,7 @@ public class Boss : MonoBehaviour
 
     public void OnPlayerDeath()
     {
+        Debug.Log("Player dies");
         _isPlayerAlive = false;
     }
 

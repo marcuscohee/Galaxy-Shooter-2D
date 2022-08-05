@@ -393,6 +393,8 @@ MonoBehaviour:
   _isBossAlive: 1
   _isPlayerAlive: 1
   _isBossMoving: 1
+  _UIManager: {fileID: 0}
+  _spawnManager: {fileID: 0}
   _health: 50
   _explosion: {fileID: 94030627856224590}
 --- !u!82 &645523470
